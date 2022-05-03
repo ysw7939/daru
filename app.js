@@ -193,9 +193,10 @@ app.use((err, req, res, next) => {
 });
 
 // 앞에서 정의하지 않은 그 밖의 url에 대한 일괄처리
-// app.use("*", (req, res, next) => {
-
-// });
+app.use("*", (req, res, next) => {
+    const err = new PageNotFoundException();
+    res.sendError(err);
+});
 
 /*----------------------------------------------------------
 | 6) 설정한 내용을 기반으로 서버 구동 시작
