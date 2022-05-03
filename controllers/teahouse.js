@@ -179,7 +179,7 @@ module.exports = (app) => {
     });
 
     /** 데이터 수정 --> Update(UPDATE) */
-    router.post("/teahouse/:teahouse_id", async (req, res, next) => {
+    router.put("/teahouse/:teahouse_id", async (req, res, next) => {
         const teahouse_id = req.get("teahouse_id");
 
         const place_name = req.post("place_name");

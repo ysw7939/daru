@@ -8,6 +8,10 @@ const logger = require("./helper/LogHelper");
 const util = require("./helper/UtilHelper");
 const fileHelper = require("./helper/FileHelper");
 const webHelper = require("./helper/WebHelper");
+// exceptions
+const BadRequestException = require("./exceptions/BadRequestExeption");
+const PageNotFoundException = require("./exceptions/PageNotFoundException");
+const RuntimeException = require("./exceptions/RuntimeException");
 //내장모듈
 const url = require("url");
 const path = require("path");
@@ -21,6 +25,8 @@ const expressSession = require("express-session"); // Session 처리
 const multer = require("multer"); // 업로드 모듈
 const thumbnail = require("node-thumbnail").thumb; // 썸네일 이미지 생성 모듈
 const cors = require("cors");
+const swaggerUi = require("swagger-ui-express");
+const swaggerJSDoc = require("swagger-jsdoc");
 
 /*----------------------------------------------------------
 | 2) Express 객체 생성
@@ -37,6 +43,26 @@ const app = express();
  *  --> 초기화 콜백함수에 전달되는 req, res객체를 확장하기 때문에
  *      다른 모듈들보다 먼저 설정되어야 한다.
  */
+const swaggerDefinition = {
+    info: {
+        title: "daru Server API",
+        version: "1.0.0",
+        description: "다루 API 명세서",
+    },
+    host: "ec2-3-39-178-133.ap-northeast-2.compute.amazonaws.com:3000",
+    basePath: "/",
+};
+const options = {
+    swaggerDefinition,
+    apis: ["./schemas/teahouse.js"],
+};
+const swaggerSpec = swaggerJSDoc(options);
+
+app.get("swagger.json", (err, res) => {
+    res.setHeader("Content-Type", "application/json");
+    res.send(swaggerSpec);
+});
+
 app.use(useragent.express());
 
 //클라이언트의 접속을 감지
@@ -135,14 +161,17 @@ app.use(
     })
 );
 
-const corsOptions = {
-    origin: "http://ec2-3-39-178-133.ap-northeast-2.compute.amazonaws.com:3000",
-};
+app.use(
+    cors({
+        origin: "*", // 출처 허용 옵션
+        credential: "true", // 사용자 인증이 필요한 리소스(쿠키 ..등) 접근
+    })
+);
 
-app.use(cors(corsOptions));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 /** req, res 객체의 기능을 확장하는 모듈 */
-app.use(webHelper());
+https: app.use(webHelper());
 
 // 라우터(URL 분배기) 객체 설정 --> 맨 마지막에 설정
 const router = express.Router();
