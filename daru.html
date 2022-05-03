@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>학과관리 ::: MySchool</title>
+        <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+        />
+    </head>
+    <body>
+        <!-- header -->
+        <div data-include="../inc/header.html"></div>
+
+        <div class="container">
+            <div class="page-header">
+                <h1>학과추가</h1>
+            </div>
+            <form name="form" id="department-form" class="form-horizontal">
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="place_name">
+                        <span class="text-danger">*</span> 찻집이름
+                    </label>
+                    <div class="col-md-10">
+                        <input
+                            type="text"
+                            class="form-control"
+                            name="place_name"
+                            id="place_name"
+                        />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="phone">
+                        전화번호</label
+                    >
+                    <div class="col-md-10">
+                        <input
+                            type="text"
+                            class="form-control"
+                            name="phone"
+                            id="phone"
+                        />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="address">
+                        주소</label
+                    >
+                    <div class="col-md-10">
+                        <input
+                            type="text"
+                            class="form-control"
+                            name="address"
+                            id="address"
+                        />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="manager_phone">
+                        관리자 번호</label
+                    >
+                    <div class="col-md-10">
+                        <input
+                            type="text"
+                            class="form-control"
+                            name="manager_phone"
+                            id="manager_phone"
+                        />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="homepage">
+                        홈페이지</label
+                    >
+                    <div class="col-md-10">
+                        <input
+                            type="text"
+                            class="form-control"
+                            name="homepage"
+                            id="homepage"
+                        />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="instagram">
+                        인스타</label
+                    >
+                    <div class="col-md-10">
+                        <input
+                            type="text"
+                            class="form-control"
+                            name="instagram"
+                            id="instagram"
+                        />
+                    </div>
+                </div>
+
+                <hr />
+
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary">
+                        저장하기
+                    </button>
+                    <button type="reset" class="btn btn-warning">
+                        다시 작성
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- footer -->
+        <div data-include="../inc/footer.html"></div>
+
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+        <script>
+            document
+                .querySelector("#department-form")
+                .addEventListener("submit", async (e) => {
+                    e.preventDefault();
+
+                    // 입력값 받아오기
+                    const place_name =
+                        document.querySelector("#place_name").value;
+                    const phone = document.querySelector("#phone").value;
+                    const address = document.querySelector("#address").value;
+                    const homepage = document.querySelector("#homepage").value;
+                    const instagram =
+                        document.querySelector("#instagram").value;
+                    const manager_phone =
+                        document.querySelector("#manager_phone").value;
+
+                    // 입력값에 대한 유효성 검사 진행.. (이 예제에서는 생략)
+
+                    let json = null;
+
+                    try {
+                        const response = await axios.post(
+                            "http://ec2-3-39-178-133.ap-northeast-2.compute.amazonaws.com:3000/teahouse",
+                            {
+                                place_name: place_name,
+                                phone: phone,
+                                address: address,
+                                manager_phone: manager_phone,
+                                homepage: homepage,
+                                instagram: instagram,
+                            }
+                        );
+
+                        json = response.data;
+                    } catch (e) {
+                        alert(e.response.data.rtmsg);
+                        return;
+                    }
+
+                    if (json != null) {
+                        // 새로 생성된 데이터의 PK를 상세페이지로 전달하여 저장결과를 확인해야 한다.
+                        // window.location =
+                        //     "/myschool/department/view.html?deptno=" +
+                        //     json.item[0].deptno;
+                    }
+                });
+        </script>
+    </body>
+</html>

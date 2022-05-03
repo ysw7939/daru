@@ -43,7 +43,7 @@ module.exports = (app) => {
 
             // 데이터 조회
             let sql2 =
-                "SELECT place_name, phone, address, manager_phone FROM teahouse";
+                "SELECT teahouse_id,place_name, phone, address, manager_phone, instagram, homepage FROM teahouse";
 
             // SQL문에 설정할 치환값
             let args2 = [];
@@ -78,7 +78,7 @@ module.exports = (app) => {
 
             // 데이터 조회
             const sql =
-                "SELECT place_name, phone, address, manager_phone FROM teahouse";
+                "SELECT teahouse_id,place_name, phone, address, manager_phone,instagram, homepage FROM teahouse";
             const [result] = await dbcon.query(sql);
             json = result;
         } catch (err) {
@@ -109,7 +109,7 @@ module.exports = (app) => {
 
             // 데이터 조회
             const sql =
-                "SELECT place_name, phone, address, manager_phone FROM teahouse WHERE teahouse_id=?";
+                "SELECT teahouse_id, place_name, phone, address, manager_phone,instagram, homepage FROM teahouse WHERE teahouse_id=?";
             const [result] = await dbcon.query(sql, [teahouse_id]);
 
             // 조회 결과를 미리 준비한 변수에 저장함
@@ -131,6 +131,8 @@ module.exports = (app) => {
         const phone = req.post("phone");
         const address = req.post("address");
         const manager_phone = req.post("manager_phone");
+        const instagram = req.post("instagram");
+        const homepage = req.post("homepage");
 
         try {
             regexHelper.value(place_name, "이름이 없습니다.");
@@ -148,13 +150,20 @@ module.exports = (app) => {
 
             // 데이터 저장하기
             const sql =
-                "INSERT INTO teahouse (place_name, phone, address, manager_phone) VALUES (?, ?, ?, ?)";
-            const input_data = [place_name, phone, address, manager_phone];
+                "INSERT INTO teahouse (place_name, phone, address, manager_phone, instagram, homepage) VALUES (?, ?, ?, ?, ?, ?)";
+            const input_data = [
+                place_name,
+                phone,
+                address,
+                manager_phone,
+                instagram,
+                homepage,
+            ];
             const [result1] = await dbcon.query(sql, input_data);
 
             // 새로 저장된 데이터의 PK값을 활용하여 다시 조회
             const sql2 =
-                "SELECT place_name, phone, address, manager_phone FROM teahouse WHERE teahouse_id=?";
+                "SELECT teahouse_id, place_name, phone, address, manager_phone, instagram, homepage FROM teahouse WHERE teahouse_id=?";
             const [result2] = await dbcon.query(sql2, [result1.insertId]);
 
             // 조회 결과를 미리 준비한 변수에 저장함
@@ -169,94 +178,101 @@ module.exports = (app) => {
         res.sendJson({ item: json });
     });
 
-    // /** 데이터 수정 --> Update(UPDATE) */
-    // router.put("/department/:deptno", async (req, res, next) => {
-    //     const deptno = req.get("deptno");
-    //     const dname = req.put("dname");
-    //     const loc = req.put("loc");
+    /** 데이터 수정 --> Update(UPDATE) */
+    router.post("/teahouse/:teahouse_id", async (req, res, next) => {
+        const teahouse_id = req.get("teahouse_id");
 
-    //     console.log(deptno);
-    //     console.log(dname);
-    //     console.log(loc);
-    //     if (deptno == null || dname == null || loc == null) {
-    //         // 400 Bad Request -> 잘못된 요청
+        const place_name = req.post("place_name");
+        const phone = req.post("phone");
+        const address = req.post("address");
+        const manager_phone = req.post("manager_phone");
+        const instagram = req.post("instagram");
+        const homepage = req.post("homepage");
 
-    //         return next(new BadRequestException("잘못된요청"));
-    //     }
+        try {
+            regexHelper.value(place_name, "이름이 없습니다.");
+            regexHelper.value(phone, "정보가 없습니다.");
+            regexHelper.value(address, "정보가 없습니다.");
+            regexHelper.value(manager_phone, "정보가 없습니다.");
+        } catch (err) {
+            return next(err);
+        }
 
-    //     /** 데이터 수정하기 */
-    //     // 데이터 조회 결과가 저장될 빈 변수
-    //     let json = null;
+        /** 데이터 수정하기 */
+        // 데이터 조회 결과가 저장될 빈 변수
+        let json = null;
 
-    //     try {
-    //         // 데이터베이스 접속
-    //         dbcon = await mysql2.createConnection(config.database);
-    //         await dbcon.connect();
+        try {
+            // 데이터베이스 접속
+            dbcon = await mysql2.createConnection(config.database);
+            await dbcon.connect();
 
-    //         // 데이터 수정하기
-    //         const sql = "UPDATE department SET dname=?, loc=? WHERE deptno=?";
-    //         const input_data = [dname, loc, deptno];
-    //         const [result1] = await dbcon.query(sql, input_data);
+            // 데이터 수정하기
+            const sql =
+                "UPDATE teahouse SET place_name=?, phone=?, address=?,manager_phone=?, instagram=?, homepage=? WHERE teahouse_id=?";
+            const input_data = [
+                place_name,
+                phone,
+                address,
+                manager_phone,
+                instagram,
+                homepage,
+                teahouse_id,
+            ];
+            const [result1] = await dbcon.query(sql, input_data);
 
-    //         // 결과 행 수가 0이라면 예외처리
-    //         if (result1.affectedRows < 1) {
-    //             throw new Error("수정된 데이터가 없습니다.");
-    //         }
+            // 결과 행 수가 0이라면 예외처리
+            if (result1.affectedRows < 1) {
+                throw new Error("수정된 데이터가 없습니다.");
+            }
 
-    //         // 새로 저장된 데이터의 PK값을 활용하여 다시 조회
-    //         const sql2 =
-    //             "SELECT deptno, dname, loc FROM department WHERE deptno=?";
-    //         const [result2] = await dbcon.query(sql2, [deptno]);
+            // 새로 저장된 데이터의 PK값을 활용하여 다시 조회
+            const sql2 =
+                "SELECT teahouse_id, place_name, phone, address, manager_phone, instagram, homepage FROM teahouse WHERE teahouse_id=?";
+            const [result2] = await dbcon.query(sql2, [teahouse_id]);
 
-    //         // 조회 결과를 미리 준비한 변수에 저장함
-    //         json = result2;
-    //     } catch (err) {
-    //         return next(err);
-    //     } finally {
-    //         dbcon.end();
-    //     }
+            // 조회 결과를 미리 준비한 변수에 저장함
+            json = result2;
+        } catch (err) {
+            return next(err);
+        } finally {
+            dbcon.end();
+        }
 
-    //     // 모든 처리에 성공했으므로 정상 조회 결과 구성
-    //     res.sendJson({ item: json });
-    // });
+        // 모든 처리에 성공했으므로 정상 조회 결과 구성
+        res.sendJson({ item: json });
+    });
 
-    // /** 데이터 삭제 --> Delete(DELETE) */
-    // router.delete("/department/:deptno", async (req, res, next) => {
-    //     const deptno = req.get("deptno");
+    /** 데이터 삭제 --> Delete(DELETE) */
+    router.delete("/teahouse/:teahouse_id", async (req, res, next) => {
+        const teahouse_id = req.get("teahouse_id");
 
-    //     if (deptno === undefined) {
-    //         //400 Bad Request -> 잘못된 요청
-    //         return next(new Error(400));
-    //     }
+        /** 데이터 삭제하기 */
+        try {
+            // 데이터베이스 접속
+            dbcon = await mysql2.createConnection(config.database);
+            await dbcon.connect();
 
-    //     /** 데이터 삭제하기 */
-    //     try {
-    //         // 데이터베이스 접속
-    //         dbcon = await mysql2.createConnection(config.database);
-    //         await dbcon.connect();
+            // 삭제하고자 하는 원 데이터를 참조하는 자식 데이터를 먼저 삭제해야 한다.
+            // 만약 자식데이터를 유지해야 한다면 참조키 값을 null로 업데이트 해야 한다.
+            // 단, 자식 데이터는 결과행 수가 0이더라도 무시한다.
 
-    //         // 삭제하고자 하는 원 데이터를 참조하는 자식 데이터를 먼저 삭제해야 한다.
-    //         // 만약 자식데이터를 유지해야 한다면 참조키 값을 null로 업데이트 해야 한다.
-    //         // 단, 자식 데이터는 결과행 수가 0이더라도 무시한다.
-    //         await dbcon.query("DELETE FROM student WHERE deptno=?", [deptno]);
-    //         await dbcon.query("DELETE FROM professor WHERE deptno=?", [deptno]);
+            // 데이터 삭제하기
+            const sql = "DELETE FROM teahouse WHERE teahouse_id=?";
+            const [result1] = await dbcon.query(sql, [teahouse_id]);
 
-    //         // 데이터 삭제하기
-    //         const sql = "DELETE FROM department WHERE deptno=?";
-    //         const [result1] = await dbcon.query(sql, [deptno]);
+            // 결과 행 수가 0이라면 예외처리
+            if (result1.affectedRows < 1) {
+                throw new Error("삭제된 데이터가 없습니다.");
+            }
+        } catch (err) {
+            return next(err);
+        } finally {
+            dbcon.end();
+        }
 
-    //         // 결과 행 수가 0이라면 예외처리
-    //         if (result1.affectedRows < 1) {
-    //             throw new Error("삭제된 데이터가 없습니다.");
-    //         }
-    //     } catch (err) {
-    //         return next(err);
-    //     } finally {
-    //         dbcon.end();
-    //     }
-
-    //     // 모든 처리에 성공했으므로 정상 조회 결과 구성
-    //     res.sendJson();
-    // });
+        // 모든 처리에 성공했으므로 정상 조회 결과 구성
+        res.sendJson();
+    });
     return router;
 };

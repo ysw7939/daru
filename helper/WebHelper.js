@@ -7,6 +7,9 @@ const path = require("path");
 module.exports = () => {
     return (req, res, next) => {
         /** GET,URL,POST,PUT,DELETE 파라미터를 수신하여 값을 리턴하는 함수 */
+        res.setHeader("Access-Control-Allow-origin", "*");
+        res.setHeader("Access-Control-Allow-Credentials", "true"); // 쿠키 주고받기 허용
+
         req._getParam = (method, key, def = null) => {
             // 파라미터를 HTTP 전송방식에 따라 받는다.
             let value = null;

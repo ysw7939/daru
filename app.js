@@ -20,6 +20,7 @@ const cookieParser = require("cookie-parser"); // Cookie 처리
 const expressSession = require("express-session"); // Session 처리
 const multer = require("multer"); // 업로드 모듈
 const thumbnail = require("node-thumbnail").thumb; // 썸네일 이미지 생성 모듈
+const cors = require("cors");
 
 /*----------------------------------------------------------
 | 2) Express 객체 생성
@@ -134,6 +135,12 @@ app.use(
     })
 );
 
+const corsOptions = {
+    origin: "http://ec2-3-39-178-133.ap-northeast-2.compute.amazonaws.com:3000",
+};
+
+app.use(cors(corsOptions));
+
 /** req, res 객체의 기능을 확장하는 모듈 */
 app.use(webHelper());
 
@@ -149,46 +156,33 @@ app.use(require("./controllers/teahouse")(app));
 
 //런타임 에러가 발생한 경우에 대한 일괄 처리
 app.use((err, req, res, next) => {
-    logger.error(err);
-
-    let status = 500;
-    let msg = null;
-
-    if (!isNaN(err.message)) {
-        status = parseInt(err.message);
-    }
-
-    switch (status) {
-        case 400:
-            res.sendBadRequest();
-            break;
-        default:
-            res.sendRuntimeError();
-            break;
+    if (err instanceof BadRequestException) {
+        res.sendError(err);
+    } else {
+        res.sendError(new RuntimeException(err.message));
     }
 });
 
 // 앞에서 정의하지 않은 그 밖의 url에 대한 일괄처리
 app.use("*", (req, res, next) => {
-    res.sendNotFound();
+    const err = new PageNotFoundException();
+    res.sendError(err);
 });
 
 /*----------------------------------------------------------
 | 6) 설정한 내용을 기반으로 서버 구동 시작
 -----------------------------------------------------------*/
 // 백엔드를 가동하고 3000번 포트에서 대기
-const ip = util.myip();
 
-app.listen(config.server_port, () => {
+var server = app.listen(config.server_port, () => {
     logger.debug("-------------------------------------");
     logger.debug("|        Start Express Server       |");
     logger.debug("-------------------------------------");
+    var host = server.address().address;
 
-    ip.forEach((v, i) => {
-        logger.debug(
-            "server address => http://" + v + ":" + config.server_port
-        );
-    });
+    var port = server.address().port;
+
+    console.log("Server is working : PORT - ", port);
 
     logger.debug("-------------------------------------");
 });
