@@ -97,7 +97,7 @@ router.get("/", function (req, res) {
  * @swagger
  * /teahouse:
  *   post:
- *     description: 매장 생성 하기
+ *     description: 매장 생성
  *     tags: [Teahouse]
  *     produces:
  *     - "application/json"
