@@ -49,7 +49,7 @@ const swaggerDefinition = {
         version: "1.0.0",
         description: "다루 API 명세서",
     },
-    host: "cheeseinthelife.com",
+    host: "cheeseinthelife.com:433",
     basePath: "/",
 };
 const options = {

@@ -16,7 +16,7 @@ module.exports = {
     },
 
     /** 웹 서버 포트번호 */
-    server_port: 80,
+    server_port: 433,
 
     /** 쿠키 저장시 사용할 도메인 */
     // 1) localhost인 경우 공백으로 설정
