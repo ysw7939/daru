@@ -49,7 +49,7 @@ const swaggerDefinition = {
         version: "1.0.0",
         description: "다루 API 명세서",
     },
-    host: "ec2-3-39-178-133.ap-northeast-2.compute.amazonaws.com:443",
+    host: "cheeseinthelife.com:80",
     basePath: "/",
 };
 const options = {
@@ -202,8 +202,7 @@ app.use("*", (req, res, next) => {
 | 6) 설정한 내용을 기반으로 서버 구동 시작
 -----------------------------------------------------------*/
 // 백엔드를 가동하고 3000번 포트에서 대기
-
-var server = app.listen(config.server_port, () => {
+var server = http.createServer(app).listen(config.server_port, () => {
     logger.debug("-------------------------------------");
     logger.debug("|        Start Express Server       |");
     logger.debug("-------------------------------------");
