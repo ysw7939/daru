@@ -49,7 +49,7 @@ const swaggerDefinition = {
         version: "1.0.0",
         description: "다루 API 명세서",
     },
-    host: "ec2-3-39-178-133.ap-northeast-2.compute.amazonaws.com:3000",
+    host: "ec2-3-39-178-133.ap-northeast-2.compute.amazonaws.com:443",
     basePath: "/",
 };
 const options = {
