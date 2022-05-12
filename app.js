@@ -202,6 +202,8 @@ app.use("*", (req, res, next) => {
 | 6) 설정한 내용을 기반으로 서버 구동 시작
 -----------------------------------------------------------*/
 // 백엔드를 가동하고 3000번 포트에서 대기
+const ip = util.myip();
+
 var server = app.listen(config.server_port, () => {
     logger.debug("-------------------------------------");
     logger.debug("|        Start Express Server       |");
@@ -210,7 +212,11 @@ var server = app.listen(config.server_port, () => {
 
     var port = server.address().port;
 
-    console.log("Server is working : PORT - ", port);
+    ip.forEach((v, i) => {
+        logger.debug(
+            "server address => http://" + v + ":" + config.server_port
+        );
+    });
 
     logger.debug("-------------------------------------");
 });

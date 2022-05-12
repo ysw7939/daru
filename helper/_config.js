@@ -29,6 +29,13 @@ module.exports = {
         session_encrypt_key: "1234567890",
     },
 
+    /** SMS 발송 정보 */
+    sens: {
+        accessKey: "WgAPV0UzHskuFAXIStZR",
+        secretKey: "09OkIK4aCwSHygE2UWuhTfuynwH6Etl7NHjfNQp3",
+        serviceId: "ncp:sms:kr:283677234942:daru",
+        callNumber: "01063207939",
+    },
     /** 메일 발송 정보 */
     sendmail_info: {
         host: "smtp.gmail.com",
