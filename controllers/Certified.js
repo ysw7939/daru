@@ -1,53 +1,42 @@
-const Axios = require("axios");
-const Cache = require("memory-cache");
-const Config = require("../config");
-
-const postVerifyCode = async (req, res) => {
-    const { phoneNumber } = req.payload;
-
-    Cache.del(phoneNumber);
-
-    let verifyCode;
-    for (let i = 0; i < 6; i++) {
-        verifyCode += parseInt(Math.random() * 10);
+router.post("/login", function (req, res, next) {
+    console.log("REST API Post Method - Member Login And JWT Sign");
+    const memberId = req.body.id;
+    const memberPassword = req.body.password;
+    var memberItem = memberList.find((object) => object.id == memberId);
+    if (memberItem != null) {
+        if (memberItem.password == memberPassword) {
+            const secret = "005c9780fe7c11eb89b4e39719de58a5";
+            jwt.sign(
+                {
+                    memberId: memberItem.id,
+                    memberName: memberItem.name,
+                },
+                secret,
+                {
+                    expiresIn: "1d",
+                },
+                (err, token) => {
+                    if (err) {
+                        console.log(err);
+                        res.status(401).json({
+                            success: false,
+                            errormessage: "token sign fail",
+                        });
+                    } else {
+                        res.json({ success: true, accessToken: token });
+                    }
+                }
+            );
+        } else {
+            res.status(401).json({
+                success: false,
+                errormessage: "id and password are not identical",
+            });
+        }
+    } else {
+        res.status(401).json({
+            success: false,
+            errormessage: "id and password are not identical",
+        });
     }
-
-    Cache.put(phoneNumber, verifyCode);
-
-    try {
-        Axios.post(
-            `https://api-sens.ncloud.com/v1/sms/services/${Config.SENSAPI}/messages`,
-            {
-                "X-NCP-auth-key": Config.SENSAPI.AccessKeyId,
-                "X-NCP-service-secret": Config.SENSAPI.serviceSecret,
-            },
-            {
-                type: "sms",
-                from: Config.SENSAPI.companyNumber,
-                to: [phoneNumber],
-                content: `인증번호는 ${verifyCode}입니다.`,
-            }
-        );
-
-        return res.response("인증번호 요청 성공");
-    } catch (e) {
-        Cache.del(phoneNumber);
-        throw e;
-    }
-};
-
-const confirmVerifyCode = async (req, res) => {
-    const { phoneNumber, verifyCode } = req.payload;
-
-    const CacheData = Cache.get(phoneNumber);
-    if (!CacheData) {
-        return res.response("인증번호를 다시 요청해주세요.").code(400);
-    }
-
-    if (CacheData !== verifyCode) {
-        return res.response("인증번호를 다시 요청해주세요.").code(400);
-    }
-
-    Cache.del(phoneNumber);
-    return res.response("인증번호 검증 성공");
-};
+});
