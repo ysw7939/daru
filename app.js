@@ -52,7 +52,7 @@ const swaggerDefinition = {
 
     host: "cheeseinthelife.com",
     basePath: "/",
-    schemes: ["http", "https"],
+    schemes: ["https"],
 };
 const options = {
     swaggerDefinition,
