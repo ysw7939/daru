@@ -90,6 +90,8 @@ module.exports = {
         let authHeader = req.headers["authorization"];
         let token = authHeader && authHeader.split(" ")[1];
 
+        console.log(token);
+
         if (!token) {
             console.log("wrong token format or token is not sended");
             return res.sendStatus(400);

@@ -28,7 +28,7 @@ module.exports = (app) => {
 
             // 데이터 조회
             const sql =
-                "SELECT manager_id, email, phone, password, user_id, date_birth, gender FROM managers";
+                "SELECT manager_id, email, phone, user_id, date_birth, gender FROM managers";
             const [result] = await dbcon.query(sql);
             json = result;
         } catch (err) {
@@ -43,7 +43,7 @@ module.exports = (app) => {
 
     /** 특정 항목에 대한 상세 조회 --> Read(SELECT) */
     router.get("/managers/:manager_id", async (req, res, next) => {
-        const manager_id = req.get("managers_id");
+        const manager_id = req.get("manager_id");
 
         if (manager_id == null) {
             // 400 Bad Request -> 잘못된 요청
@@ -59,7 +59,7 @@ module.exports = (app) => {
 
             // 데이터 조회
             const sql =
-                "SELECT manager_id, email, phone, password, user_id, date_birth, gender, FROM managers where manager_id=?";
+                "SELECT manager_id, email, phone, password, user_id, date_birth, gender FROM managers where manager_id=?";
             const [result] = await dbcon.query(sql, [manager_id]);
 
             // 조회 결과를 미리 준비한 변수에 저장함
@@ -114,7 +114,7 @@ module.exports = (app) => {
 
             // 새로 저장된 데이터의 PK값을 활용하여 다시 조회
             const sql2 =
-                "SELECT manager_id, email, phone, password, user_id, date_birth, gender FROM managers WHERE manager_id=?";
+                "SELECT manager_id, email, phone, user_id, date_birth, gender FROM managers WHERE manager_id=?";
             const [result2] = await dbcon.query(sql2, [result1.insertId]);
 
             // 조회 결과를 미리 준비한 변수에 저장함
@@ -161,7 +161,7 @@ module.exports = (app) => {
 
             // 데이터 수정하기
             const sql =
-                "UPDATE managers SET email=?, phone=?, password=?,user_id=?, date_birth=?, gender=? WHERE manager_id=?";
+                "UPDATE managers SET email=?, phone=?, password=?, user_id=?, date_birth=?, gender=? WHERE manager_id=?";
             const input_data = [
                 email,
                 phone,
@@ -180,7 +180,7 @@ module.exports = (app) => {
 
             // 새로 저장된 데이터의 PK값을 활용하여 다시 조회
             const sql2 =
-                "SELECT manager_id, email, phone, password, user_id, date_birth, gender, FROM managers where manager_id=?";
+                "SELECT manager_id, email, phone, user_id, date_birth, gender FROM managers where manager_id=?";
             const [result2] = await dbcon.query(sql2, [manager_id]);
 
             // 조회 결과를 미리 준비한 변수에 저장함

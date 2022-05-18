@@ -160,7 +160,7 @@ module.exports = (app) => {
     });
 
     // access token 유효성 확인을 위한 예시 요청
-    router.get("/user", authenticateAccessToken, async (req, res) => {
+    router.get("/manager_info", authenticateAccessToken, async (req, res) => {
         console.log(req.user);
 
         // 데이터 조회 결과가 저장될 빈 변수

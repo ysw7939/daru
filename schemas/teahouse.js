@@ -6,22 +6,7 @@
  *   name: Teahouse
  *   description: 매장데이터 처리
  * definitions:
- *   Post:
- *     type: "object"
- *     properties:
- *       place_name:
- *         type: "string"
- *       phone:
- *         type: "string"
- *       address:
- *         type: "string"
- *       manager_phone:
- *         type: "string"
- *       instagram:
- *         type: "string"
- *       homepage:
- *         type: "string"
- *   Put:
+ *   teahouse:
  *     type: "object"
  *     properties:
  *       place_name:
@@ -106,7 +91,7 @@ router.get("/", function (req, res) {
  *       in: "body"
  *       required: true
  *       schema:
- *         $ref: "#/definitions/Post"
+ *         $ref: "#/definitions/teahouse"
  *     responses:
  *       "200":
  *         description: "successful operation"
@@ -135,7 +120,7 @@ router.post("/", function (req, res) {
  *       in: "body"
  *       required: true
  *       schema:
- *         $ref: "#/definitions/Post"
+ *         $ref: "#/definitions/teahouse"
  *     responses:
  *       "200":
  *         description: "successful operation"
@@ -172,7 +157,7 @@ router.get("/", function (req, res) {
  * @swagger
  * /teahouse/{teahouse_id}:
  *   delete:
- *     description: 매장데이터 상세 조회
+ *     description: 매장데이터 삭제
  *     tags: [Teahouse]
  *     produces:
  *     - "application/json"
@@ -190,4 +175,328 @@ router.get("/", function (req, res) {
  */
 router.delete("/", function (req, res) {
     // 매장데이터 삭제
+});
+
+//--------------------------------관리자 회원---------------------------------------------
+
+/**
+ * @swagger
+ * tags:
+ *   name: Managers
+ *   description: 관리자 회원관리
+ * definitions:
+ *   Manager:
+ *     type: "object"
+ *     properties:
+ *       email:
+ *         type: "string"
+ *       phone:
+ *         type: "string"
+ *       password:
+ *         type: "string"
+ *       user_id:
+ *         type: "string"
+ *       date_birth:
+ *         type: "string"
+ *       gender:
+ *         type: "string"
+ */
+
+/**
+ * @swagger
+ * /managers:
+ *   get:
+ *     description: 관리자 회원데이터 전체 조회
+ *     tags: [Managers]
+ *     responses:
+ *       "200":
+ *         description: "successful operation"
+ *
+ */
+router.get("/", function (req, res) {
+    // /managers
+});
+
+/**
+ * @swagger
+ * /managers/{manager_id}:
+ *   get:
+ *     description: 관리자회원 상세 조회
+ *     tags: [Managers]
+ *     produces:
+ *     - "application/json"
+ *     parameters:
+ *     - name: "manager_id"
+ *       in: "path"
+ *       description: "ID of tehouse to update"
+ *       required: true
+ *       type: "integer"
+ *       format: "int64"
+ *     responses:
+ *       "200":
+ *         description: "successful operation"
+ *
+ */
+router.get("/", function (req, res) {
+    // 관리자회원 상세조회
+});
+
+/**
+ * @swagger
+ * /managers:
+ *   post:
+ *     description: 관리자회원 생성 하기
+ *     tags: [Managers]
+ *     produces:
+ *     - "application/json"
+ *     parameters:
+ *     - name: "body"
+ *       in: "body"
+ *       required: true
+ *       schema:
+ *         $ref: "#/definitions/Manager"
+ *     responses:
+ *       "200":
+ *         description: "successful operation"
+ *
+ */
+router.post("/", function (req, res) {
+    // 관리자회원 생성
+});
+
+/**
+ * @swagger
+ * /managers/{manager_id} :
+ *   put:
+ *     description: 관리자회원 수정
+ *     tags: [Managers]
+ *     produces:
+ *     - "application/json"
+ *     parameters:
+ *     - name: "manager_id"
+ *       in: "path"
+ *       description: "ID of tehouse to update"
+ *       required: true
+ *       type: "integer"
+ *       format: "int64"
+ *     - name: "body"
+ *       in: "body"
+ *       required: true
+ *       schema:
+ *         $ref: "#/definitions/Manager"
+ *     responses:
+ *       "200":
+ *         description: "successful operation"
+ */
+router.post("/", function (req, res) {
+    // 관리자회원 수정
+});
+
+/**
+ * @swagger
+ * /managers/{manager_id}:
+ *   delete:
+ *     description: 관리자회원 삭제
+ *     tags: [Managers]
+ *     produces:
+ *     - "application/json"
+ *     parameters:
+ *     - name: "teahouse_id"
+ *       in: "path"
+ *       description: "ID of tehouse to update"
+ *       required: true
+ *       type: "integer"
+ *       format: "int64"
+ *     responses:
+ *       "200":
+ *         description: "successful operation"
+ *
+ */
+router.delete("/", function (req, res) {
+    // 관리자회원 삭제
+});
+
+//--------------------------------번호인증---------------------------------------------
+/**
+ * @swagger
+ * tags:
+ *   name: Certification
+ *   description: 전화번호 인증
+ * definitions:
+ *   Cotfc :
+ *     type: "object"
+ *     properties:
+ *       phone:
+ *         type: 'string'
+ *       number:
+ *         type: 'string'
+ *   Sms :
+ *     type: "object"
+ *     properties:
+ *       phone:
+ *         type: 'string'
+ */
+/**
+ * @swagger
+ * /sms:
+ *   post:
+ *     description: 인증번호 전송
+ *     tags: [Certification]
+ *     produces:
+ *     - "application/json"
+ *     parameters:
+ *     - name: "body"
+ *       in: "body"
+ *       required: true
+ *       schema:
+ *         $ref: "#/definitions/Sms"
+ *     responses:
+ *       "200":
+ *         description: "successful operation"
+ *
+ */
+router.post("/", function (req, res) {
+    // 인증번호 전송
+});
+
+/**
+ * @swagger
+ * /cotfc_num:
+ *   post:
+ *     description: 인증번호 확인
+ *     tags: [Certification]
+ *     produces:
+ *     - "application/json"
+ *     parameters:
+ *     - name: "body"
+ *       in: "body"
+ *       required: true
+ *       schema:
+ *         $ref: "#/definitions/Cotfc"
+ *     responses:
+ *       "200":
+ *         description: "successful operation"
+ *
+ */
+router.post("/", function (req, res) {
+    // 인증번호 확인
+});
+
+//--------------------------------관리자회원 접속---------------------------------------------
+/**
+ * @swagger
+ * tags:
+ *   name: Manager_login
+ *   description: 로그인/아이디 중복검사/토큰발급
+ * definitions:
+ *   Login :
+ *     type: "object"
+ *     properties:
+ *       user_id:
+ *         type: 'string'
+ *       password:
+ *         type: 'string'
+ *   id_unique :
+ *     type: "object"
+ *     properties:
+ *       user_id:
+ *         type: 'string'
+ *   refresh :
+ *     type: "object"
+ *     properties:
+ *       refreshToken:
+ *         type: 'string'
+ */
+
+/**
+ * @swagger
+ * /managers/login:
+ *   post:
+ *     description: 관리자회원 로그인
+ *     tags: [Manager_login]
+ *     produces:
+ *     - "application/json"
+ *     parameters:
+ *     - name: "body"
+ *       in: "body"
+ *       required: true
+ *       schema:
+ *         $ref: "#/definitions/Login"
+ *     responses:
+ *       "200":
+ *         description: "successful operation"
+ *
+ */
+router.post("/", function (req, res) {
+    // 관리자회원 로그인
+});
+
+/**
+ * @swagger
+ * /members/id_unique_check:
+ *   post:
+ *     description: 아이디 중복검사
+ *     tags: [Manager_login]
+ *     produces:
+ *     - "application/json"
+ *     parameters:
+ *     - name: "body"
+ *       in: "body"
+ *       required: true
+ *       schema:
+ *         $ref: "#/definitions/id_unique"
+ *     responses:
+ *       "200":
+ *         description: "successful operation"
+ *
+ */
+router.post("/", function (req, res) {
+    // 아이디 중복검사
+});
+
+/**
+ * @swagger
+ * /refresh:
+ *   post:
+ *     description: 리프레쉬토큰으로 토큰 재발급
+ *     tags: [Manager_login]
+ *     produces:
+ *     - "application/json"
+ *     parameters:
+ *     - name: "body"
+ *       in: "body"
+ *       required: true
+ *       schema:
+ *         $ref: "#/definitions/refresh"
+ *     responses:
+ *       "200":
+ *         description: "successful operation"
+ *
+ */
+router.post("/", function (req, res) {
+    // 리프레쉬토큰으로 토큰 재발급
+});
+
+/**
+ * @swagger
+ * /manager_info:
+ *   get:
+ *     description: 액세스토큰 유효성조회
+ *     tags: [Manager_login]
+ *     produces:
+ *     - "application/json"
+ *     parameters:
+ *     - name: "Authorization"
+ *       in: "header"
+ *       description: "ID of tehouse to update"
+ *       required: true
+ *       type: "string"
+ *       format: "string"
+ *     responses:
+ *       "200":
+ *         description: "successful operation"
+ *
+ */
+router.get("/", function (req, res) {
+    // 액세스토큰 유효성조회
 });
