@@ -184,6 +184,7 @@ app.use("/", router);
 app.use(require("./controllers/teahouse")(app));
 app.use(require("./controllers/managers")(app));
 app.use(require("./controllers/certification")(app));
+app.use(require("./controllers/Certified")(app));
 
 //런타임 에러가 발생한 경우에 대한 일괄 처리
 app.use((err, req, res, next) => {

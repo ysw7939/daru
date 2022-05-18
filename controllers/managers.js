@@ -10,7 +10,7 @@ const mysql2 = require("mysql2/promise");
 const regexHelper = require("../helper/RegexHelper");
 const utilHelper = require("../helper/UtilHelper");
 
-const { sendVerificationSMS } = require("../helper/SmsHelper");
+const { sendVerificationSMS } = require("../helper/CertifyHelper");
 
 /** 라우팅 정의 부분 */
 module.exports = (app) => {
@@ -28,7 +28,7 @@ module.exports = (app) => {
 
             // 데이터 조회
             const sql =
-                "SELECT manager_id, email, phone, password, user_id, date_birth, gender, FROM managers";
+                "SELECT manager_id, email, phone, password, user_id, date_birth, gender FROM managers";
             const [result] = await dbcon.query(sql);
             json = result;
         } catch (err) {
@@ -75,7 +75,7 @@ module.exports = (app) => {
     });
 
     /** 데이터 추가 --> Create(INSERT) */
-    router.post("/manager", async (req, res, next) => {
+    router.post("/managers", async (req, res, next) => {
         // 저장을 위한 파라미터 입력받기
         const email = req.post("email");
         const phone = req.post("phone");
@@ -101,7 +101,7 @@ module.exports = (app) => {
 
             // 데이터 저장하기
             const sql =
-                "INSERT INTO manager (email, phone, password, user_id, date_birth, gender) VALUES (?, ?, ?, ?, ?, ?)";
+                "INSERT INTO managers (email, phone, password, user_id, date_birth, gender) VALUES (?, ?, ?, ?, ?, ?)";
             const input_data = [
                 email,
                 phone,
@@ -114,7 +114,7 @@ module.exports = (app) => {
 
             // 새로 저장된 데이터의 PK값을 활용하여 다시 조회
             const sql2 =
-                "SELECT manager_id, email, phone, password, user_id, date_birth, gender, FROM managers where manager_id=?";
+                "SELECT manager_id, email, phone, password, user_id, date_birth, gender FROM managers WHERE manager_id=?";
             const [result2] = await dbcon.query(sql2, [result1.insertId]);
 
             // 조회 결과를 미리 준비한 변수에 저장함

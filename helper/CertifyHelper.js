@@ -2,6 +2,8 @@ const { sens } = require("./_config");
 const CryptoJS = require("crypto-js");
 const axios = require("axios");
 const cache = require("memory-cache");
+const jwt = require("jsonwebtoken");
+const config = require("./_config");
 
 module.exports = {
     sendVerificationSMS: async (req, res) => {

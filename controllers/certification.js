@@ -11,7 +11,7 @@ const regexHelper = require("../helper/RegexHelper");
 const cache = require("memory-cache");
 const BadRequestException = require("../exceptions/BadRequestExeption");
 
-const { sendVerificationSMS } = require("../helper/SmsHelper");
+const { sendVerificationSMS } = require("../helper/CertifyHelper");
 
 /** 라우팅 정의 부분 */
 module.exports = (app) => {
