@@ -53,6 +53,11 @@ module.exports = {
         secret: "SeCrEtKeYfOrHaShInG",
     },
 
+    // 카카오톡 REST API 키
+    kakao: {
+        kakao_id: "5a73e366fa63d6ac8f9903669559d43c",
+    },
+
     /** 업로드 경로 */
     upload: {
         path: "/upload",

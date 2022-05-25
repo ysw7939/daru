@@ -10,6 +10,7 @@ const mysql2 = require("mysql2/promise");
 const regexHelper = require("../helper/RegexHelper");
 const cache = require("memory-cache");
 const BadRequestException = require("../exceptions/BadRequestExeption");
+const passport = require("passport");
 
 const { sendVerificationSMS } = require("../helper/CertifyHelper");
 
@@ -35,6 +36,8 @@ module.exports = (app) => {
         cache.del(number);
         return res.sendJson({ message: "인증번호 검증 성공" });
     });
+
+    router.get("/kakao");
 
     return router;
 };

@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/ysw7939/daru#readme",
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "body-parser": "^1.20.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
@@ -32,6 +33,9 @@
     "multer": "^1.4.4",
     "mysql2": "^2.3.3",
     "node-thumbnail": "^0.15.0",
+    "passport": "^0.6.0",
+    "passport-kakao": "^1.0.1",
+    "passport-local": "^1.0.0",
     "swagger-jsdoc": "^6.2.1",
     "swagger-ui": "^4.10.3",
     "swagger-ui-express": "^4.3.0",
