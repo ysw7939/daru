@@ -10,8 +10,6 @@ const mysql2 = require("mysql2/promise");
 const regexHelper = require("../helper/RegexHelper");
 const utilHelper = require("../helper/UtilHelper");
 
-const { sendVerificationSMS } = require("../helper/CertifyHelper");
-
 /** 라우팅 정의 부분 */
 module.exports = (app) => {
     let dbcon = null;

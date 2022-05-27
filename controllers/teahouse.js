@@ -9,6 +9,7 @@ const router = require("express").Router();
 const mysql2 = require("mysql2/promise");
 const regexHelper = require("../helper/RegexHelper");
 const utilHelper = require("../helper/UtilHelper");
+const BadRequestException = require("../exceptions/BadRequestExeption");
 
 const { sendVerificationSMS } = require("../helper/CertifyHelper");
 
@@ -99,7 +100,7 @@ module.exports = (app) => {
 
         if (teahouse_id == null) {
             // 400 Bad Request -> 잘못된 요청
-            return next(new Error(400));
+            return next(BadRequestException("잘못된 요청"));
         }
         // 데이터 조회 결과가 저장될 빈 변수
         let json = null;

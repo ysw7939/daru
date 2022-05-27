@@ -1,16 +1,8 @@
-/**
- * department 테이블에 대한 CRUD 기능을 수행하는 Restful API
- */
-
 /** 모듈 참조 부분 */
 const config = require("../helper/_config");
-const logger = require("../helper/LogHelper");
 const router = require("express").Router();
 const mysql2 = require("mysql2/promise");
 const regexHelper = require("../helper/RegexHelper");
-const utilHelper = require("../helper/UtilHelper");
-
-const { sendVerificationSMS } = require("../helper/CertifyHelper");
 
 /** 라우팅 정의 부분 */
 module.exports = (app) => {
@@ -173,12 +165,10 @@ module.exports = (app) => {
             ];
             const [result1] = await dbcon.query(sql, input_data);
 
-            // 결과 행 수가 0이라면 예외처리
             if (result1.affectedRows < 1) {
                 throw new Error("수정된 데이터가 없습니다.");
             }
 
-            // 새로 저장된 데이터의 PK값을 활용하여 다시 조회
             const sql2 =
                 "SELECT manager_id, email, phone, user_id, date_birth, gender FROM managers where manager_id=?";
             const [result2] = await dbcon.query(sql2, [manager_id]);
@@ -191,7 +181,6 @@ module.exports = (app) => {
             dbcon.end();
         }
 
-        // 모든 처리에 성공했으므로 정상 조회 결과 구성
         res.sendJson({ item: json });
     });
 
@@ -205,15 +194,10 @@ module.exports = (app) => {
             dbcon = await mysql2.createConnection(config.database);
             await dbcon.connect();
 
-            // 삭제하고자 하는 원 데이터를 참조하는 자식 데이터를 먼저 삭제해야 한다.
-            // 만약 자식데이터를 유지해야 한다면 참조키 값을 null로 업데이트 해야 한다.
-            // 단, 자식 데이터는 결과행 수가 0이더라도 무시한다.
-
             // 데이터 삭제하기
             const sql = "DELETE FROM managers WHERE manager_id=?";
             const [result1] = await dbcon.query(sql, [manager_id]);
 
-            // 결과 행 수가 0이라면 예외처리
             if (result1.affectedRows < 1) {
                 throw new Error("삭제된 데이터가 없습니다.");
             }
@@ -223,7 +207,6 @@ module.exports = (app) => {
             dbcon.end();
         }
 
-        // 모든 처리에 성공했으므로 정상 조회 결과 구성
         res.sendJson();
     });
 

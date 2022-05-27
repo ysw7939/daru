@@ -1,6 +1,6 @@
 /**
  * @FileName : UtilHelper.js
- * @description : 벡엔드 개발시 자주 사용되는 독립 함수들 모음
+ * @description : 서버 IP주소찾기, 페이지네이션
  * @Author : 양수원
  */
 

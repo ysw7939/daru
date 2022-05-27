@@ -1,8 +1,4 @@
 const logger = require("./LogHelper");
-const multer = require("multer"); // 업로드 모듈
-const config = require("./_config");
-const fileHelper = require("./FileHelper");
-const path = require("path");
 
 module.exports = () => {
     return (req, res, next) => {
@@ -11,10 +7,8 @@ module.exports = () => {
         res.setHeader("Access-Control-Allow-Credentials", "true"); // 쿠키 주고받기 허용
 
         req._getParam = (method, key, def = null) => {
-            // 파라미터를 HTTP 전송방식에 따라 받는다.
             let value = null;
 
-            // 1) undefined인 경우 def값으로 대체
             // --> 파라미터를 받지만 빈 문자열이거나 공백으로만 구성된 경우는 걸러내지 못한다.
             if (method.toUpperCase() === "GET") {
                 value = req.query[key] || req.params[key] || def;
@@ -74,6 +68,7 @@ module.exports = () => {
             json.pubdate = new Date().toISOString();
             res.status(statusCode).send(json);
         };
+
         /** 결과가 200(OK)인 경우에 대한 JSON 출력 */
         res.sendJson = (data) => {
             res.sendResult(200, "OK", data);
@@ -87,73 +82,6 @@ module.exports = () => {
             res.sendResult(error.statusCode, error.message);
         };
 
-        /* 업로드 초기화 */
-        req.getMultipart = () => {
-            const multipart = multer({
-                storage: multer.diskStorage({
-                    /** 업로드 된 파일이 저장될 디렉토리 설정 */
-                    // req는 요청정보, file은 최종적으로 업로드된 결과 데이터가 저장되어 있을 객체
-                    destination: (req, file, callback) => {
-                        // 폴더 생성
-                        fileHelper.mkdirs(config.upload.dir);
-                        fileHelper.mkdirs(config.thumbnail.dir);
-                        console.debug(file);
-
-                        // 업로드 정보에 백엔드 업로드 파일 저장 폴더 위치를 추가한다.
-                        file.dir = config.upload.dir.replaceAll("\\", "/");
-
-                        // multer 객체에게 업로드 경로를 전달
-                        // callback은 다음 단계로 넘어가라는 의미이다
-                        callback(null, config.upload.dir);
-                    },
-                    /** 업로드 된 파일이 저장될 파일명 설정 */
-                    // file.originalname 변수에 파일이름이 저장되어 있다. -> ex) helloworld.png
-                    filename: (req, file, callback) => {
-                        // 파일의 확장자만 추출 --> .png
-                        const exName = path.extname(file.originalname);
-                        // 파일이 저장될 이름 (현재시각)
-                        const saveName =
-                            new Date().getTime().toString() +
-                            exName.toLowerCase();
-                        // 업로드 정보에 백엔드의 업로드 파일 이름을 추가한다.
-                        file.savename = saveName;
-                        file.path = path.join(file.dir, saveName);
-                        // 업로드 폴더안에 있는 파일에 접근할 수 있는 URL값 추가
-                        file.url = path
-                            .join("/upload", saveName)
-                            .replaceAll("\\", "/");
-                        // 구성된 정보를 req 객체에게 추가
-                        if (req.file instanceof Array) {
-                            req.file.push(file);
-                        } else {
-                            req.file = file;
-                        }
-                        callback(null, saveName);
-                    },
-                }),
-                /** 용량, 최대 업로드 파일 수 제한 설정 */
-                limits: {
-                    files: 5,
-                    fileSize: 1024 * 1024 * 20,
-                },
-                /** 업로드 될 파일의 확장자 제한 */
-                fileFilter: (req, file, callback) => {
-                    // 파일의 종류 얻기
-                    var mimetype = file.mimetype;
-
-                    // 파일 종류 문자열에 "image/"가 포함되어 있지 않은 경우
-                    if (mimetype.indexOf("image/") == -1) {
-                        const err = new Error();
-                        err.result_code = 500;
-                        err.result_msg = "이미지 파일만 업로드 가능합니다.";
-                        return callback(err);
-                    }
-                    callback(null, true);
-                },
-            });
-
-            return multipart;
-        };
         next();
     };
 };

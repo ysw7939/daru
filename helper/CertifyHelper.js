@@ -5,6 +5,8 @@ const cache = require("memory-cache");
 const jwt = require("jsonwebtoken");
 const config = require("./_config");
 
+/**@Description : 인증번호 문자 전송 */
+
 module.exports = {
     sendVerificationSMS: async (req, res) => {
         try {
